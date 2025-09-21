@@ -1,5 +1,5 @@
 const {Router} = require('express')
-
+const {userModels}=require('../db')
 const user = Router()
 
 
