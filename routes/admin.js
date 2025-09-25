@@ -65,22 +65,35 @@ admin.post('/addCourse',adminmiddleware, async(req,res)=>{
 
 
 admin.put('/change',adminmiddleware,async(req,res)=>{
-     const course = adminModel.findOne({
+    const adminId= req.userId
+  const {title,description,imageUrl,price,courseId} = req.body
+
+     const course = await adminModel.updateOne({
+        _id:courseId,
+        creatorId:adminId
+     },
+        {
         title,
         imageUrl,
-        creatorId,
         description,
         price
      })
 
-     if(course){
-        
-     }
+    res.json({
+        message:"Course Updated...",
+        courseId:course._id
+    })
 })
 
-admin.get('/allCourses',(req,res)=>{
+admin.get('/allCourses', adminmiddleware, async(req,res)=>{
+    const adminId=req.userId
+
+    const allCourses = await courseModel.find({
+        creatorId:adminId
+    })
         res.json({
-        msg:"test"
+        msg:"All courses lists",
+        allCourses
     })
 })
 
