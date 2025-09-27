@@ -1,8 +1,9 @@
 const {Router} = require('express')
-const {userModel}=require('../db')
+const {userModel,purchaseModel}=require('../db')
 const user = Router()
 const jwt = require("jsonwebtoken")
 const {JWT_SECRET}= require('../config')
+const {usermiddleware} = require('../middleware/usermiddleware')
 
 user.post('/signup', async (req, res) => {
     const { email, password, firstname, lastname } = req.body;
@@ -41,9 +42,13 @@ user.post('/signin',async (req,res)=>{
 })
 
 
-user.get('/purchases',(req,res)=>{
+user.get('/purchases',usermiddleware,async (req,res)=>{
+    const userId = req.userId
+    const purchaseCourse = await purchaseModel.findOne({
+        userId
+    })
         res.json({
-        msg:"test"
+        purchaseCourse
     })
 })
 
